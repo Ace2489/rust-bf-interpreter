@@ -10,16 +10,17 @@ struct Machine {
 impl Machine {
     fn run(&mut self, program: String) {
         loop {
-            let Some(instruction) = program.chars().nth(self.instruction_pointer) else {
-                panic!("An error occured while reading the characters from the input")
-            };
+            let instruction = self.read_instruction(&program);
+
             if instruction == ';' {
                 return;
             }
 
-            if instruction == '['{
+            // if instruction == ']' {panic!("An unpaired ']' was found in the program")};
+
+            // if instruction == '['{
                 
-            }
+            // }
             match instruction {
                 '>' => self.data_pointer += 1,
                 '<' => self.data_pointer -= 1,
@@ -37,13 +38,28 @@ impl Machine {
             self.advance_instruction_pointer();
         }
     }
+    #[inline]
     fn advance_instruction_pointer(&mut self) {
         self.instruction_pointer += 1;
+    }
+    #[inline]
+    fn parse_for_closing_bracket(&mut self){
+        let root = self.instruction_pointer;
+        loop{
+            break;
+        } 
+    }
+    #[inline]
+    fn read_instruction(&self, program: &String)->char{
+        let Some(instruction) = program.chars().nth(self.instruction_pointer) else {
+            panic!("An error occured while reading the characters from the input")
+        };
+        return instruction;
     }
 }
 
 fn main() {
-    let program = ">>+++-.,;".to_string();
+    let program = ">>+++-.,];".to_string();
     let input: Vec<u8> = vec![1, 2, 3];
     let output: Vec<u8> = Vec::new();
 
@@ -55,7 +71,6 @@ fn main() {
         output,
     };
 
-    println!("{:#?}", machine);
     machine.run(program);
     println!("{:#?}", machine)
 }
