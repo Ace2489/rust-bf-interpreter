@@ -9,18 +9,20 @@ struct Machine {
 
 impl Machine {
     fn run(&mut self, program: String) {
+        let mut matched_brackets:u16 = 0;
         loop {
             let instruction = self.read_instruction(&program);
-
             if instruction == ';' {
                 return;
             }
 
-            if instruction == ']' {panic!("An unpaired ']' was found in the program")};
+            if instruction == ']' && matched_brackets == 0 {
+                panic!("An unpaired closing bracket(']') was found in the program at position {}", self.instruction_pointer)
+            };
 
-            // if instruction == '['{
-                
-            // }
+            if instruction == '[' {
+                self.parse_for_closing_bracket(&program, &mut matched_brackets);
+            }
             match instruction {
                 '>' => self.data_pointer += 1,
                 '<' => self.data_pointer -= 1,
@@ -43,14 +45,26 @@ impl Machine {
         self.instruction_pointer += 1;
     }
     #[inline]
-    fn parse_for_closing_bracket(&mut self){
+    fn parse_for_closing_bracket(&mut self, program: &String, matched_brackets:&mut u16) {
         let root = self.instruction_pointer;
-        loop{
-            break;
-        } 
+
+        println!("parsing for closing brackets with an initial count of {}",matched_brackets);
+        loop {
+            self.advance_instruction_pointer();
+            let instruction = self.read_instruction(program);
+            if instruction == ';' {
+                panic!("An unpaired opening bracket('[') was found in the program")
+            }
+            if instruction == '[' {self.parse_for_closing_bracket(program, matched_brackets)}
+            if instruction == ']' {
+                self.instruction_pointer = root;
+                *matched_brackets +=1;
+                break;
+            }
+        }
     }
     #[inline]
-    fn read_instruction(&self, program: &String)->char{
+    fn read_instruction(&self, program: &String) -> char {
         let Some(instruction) = program.chars().nth(self.instruction_pointer) else {
             panic!("An error occured while reading the characters from the input")
         };
@@ -59,7 +73,7 @@ impl Machine {
 }
 
 fn main() {
-    let program = ">>+++-.,];".to_string();
+    let program = ">>+++-.,[++];".to_string();
     let input: Vec<u8> = vec![1, 2, 3];
     let output: Vec<u8> = Vec::new();
 
