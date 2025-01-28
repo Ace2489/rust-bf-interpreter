@@ -1,7 +1,7 @@
 #[derive(Debug)]
 struct Machine {
     instruction_pointer: usize,
-    data: [u8; 10],
+    data: [u8; 30000],
     data_pointer: usize,
     input: Vec<u8>,
     output: Vec<u8>,
@@ -84,12 +84,12 @@ fn main() {
 
     let mut machine = Machine {
         instruction_pointer: 0 as usize,
-        data: [0; 10],
+        data: [0; 30000],
         data_pointer: 0 as usize,
         input,
         output,
     };
 
     machine.run(program);
-    // println!("{:#?}", machine)
+    println!("{:#?}", machine)
 }
