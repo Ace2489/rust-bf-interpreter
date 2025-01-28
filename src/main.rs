@@ -21,7 +21,12 @@ impl Machine {
             };
 
             if instruction == '[' {
-                self.parse_for_closing_bracket(&program, &mut matched_brackets);
+                if matched_brackets == 0{
+                    self.parse_for_closing_bracket(&program, &mut matched_brackets);
+                }
+                else{
+                    matched_brackets -=1;
+                }
             }
             match instruction {
                 '>' => self.data_pointer += 1,
@@ -73,7 +78,7 @@ impl Machine {
 }
 
 fn main() {
-    let program = ">>+++-.,[++];".to_string();
+    let program = ">>+++-.,[[]++];".to_string();
     let input: Vec<u8> = vec![1, 2, 3];
     let output: Vec<u8> = Vec::new();
 
@@ -86,5 +91,5 @@ fn main() {
     };
 
     machine.run(program);
-    println!("{:#?}", machine)
+    // println!("{:#?}", machine)
 }
