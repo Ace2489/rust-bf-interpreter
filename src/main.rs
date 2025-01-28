@@ -16,7 +16,7 @@ impl Machine {
                 return;
             }
 
-            // if instruction == ']' {panic!("An unpaired ']' was found in the program")};
+            if instruction == ']' {panic!("An unpaired ']' was found in the program")};
 
             // if instruction == '['{
                 
