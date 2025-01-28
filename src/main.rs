@@ -12,16 +12,16 @@ impl Machine {
         let mut matched_brackets:u16 = 0;
         loop {
             let instruction = self.read_instruction(&program);
-            if instruction == ';' {
+            if instruction == ';' { //loop until the program termination character is read
                 return;
             }
 
-            if instruction == ']' && matched_brackets == 0 {
+            if instruction == ']' && matched_brackets == 0 { 
                 panic!("An unpaired closing bracket(']') was found in the program at position {}", self.instruction_pointer)
             };
 
-            if instruction == '[' {
-                if matched_brackets == 0{
+            if instruction == '[' { //brackets in BF indicate a loop
+                if matched_brackets == 0{ //Only scan for a matching closing bracket if we haven't already scanned in a previous iteration(an external loop)
                     self.parse_for_closing_bracket(&program, &mut matched_brackets);
                 }
                 else{
@@ -51,7 +51,7 @@ impl Machine {
     }
     #[inline]
     fn parse_for_closing_bracket(&mut self, program: &String, matched_brackets:&mut u16) {
-        let root = self.instruction_pointer;
+        let original_position = self.instruction_pointer; 
 
         println!("parsing for closing brackets with an initial count of {}",matched_brackets);
         loop {
@@ -62,7 +62,7 @@ impl Machine {
             }
             if instruction == '[' {self.parse_for_closing_bracket(program, matched_brackets)}
             if instruction == ']' {
-                self.instruction_pointer = root;
+                self.instruction_pointer = original_position;
                 *matched_brackets +=1;
                 break;
             }
