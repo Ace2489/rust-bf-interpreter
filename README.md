@@ -82,7 +82,7 @@ Panics occur for:
 
 Sample program execution:
 ```rust
-let program = "++++++++[>++++++++<-]>.".to_string(); // Outputs 64
+let program = "++++++++[>++++++++<-]>.;".to_string(); // Outputs 64
 ```
 
 Expected output:
